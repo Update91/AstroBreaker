@@ -7,7 +7,7 @@ int tVaisseau = 50;
 int tEnnemis = 45;
 //vitesse ennemis +vaisseau
 int eSpeed = 4;
-int vSpeed = 4;
+int vSpeed = 6;
 // coordonnées vaisseau
 int xVaisseau;
 int yVaisseau;
@@ -51,7 +51,7 @@ void setup(){
   screen = 0;
   aireT = triangleA(xVaisseau, yVaisseau,xVaisseau+tVaisseau, (yVaisseau-(tVaisseau>>1)), xVaisseau+tVaisseau, (yVaisseau+(tVaisseau>>1)));
   explode = new SoundFile(this, "8BitExplosion.mp3"); //Variable qui correspond à un fichier son placé dans /data du dossier projet
-  music = new SoundFile(this , "BackgroundMusic.flac");
+  music = new SoundFile(this , "BackgroundMusic.mp3");
   music.amp(volumeM);
   music.loop();
   
