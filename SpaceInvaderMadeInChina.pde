@@ -7,7 +7,7 @@ int tVaisseau = 40;
 int tEnnemis = 30;
 //vitesse ennemis +vaisseau
 int eSpeed = 4;
-int vSpeed = 8;
+int vSpeed = 6;
 // coordonnées vaisseau
 int xVaisseau;
 int yVaisseau;
@@ -26,7 +26,7 @@ int screen ;
 // aire triangle
 double aireT;
 //Police d'écriture
-PFont f;
+PFont titre, texte;
 //Images
 PImage fondAccueil,fondJeu,asteroid , vaisseau;
 //Score du joueur
@@ -35,7 +35,7 @@ int playerScore=0;
 ControlP5 cp5;
 //
 float volumeM =0.05;
-float volumeE = 0.05;
+float volumeE = 0.025;
 //
 int dropRate = 5;
 
@@ -43,7 +43,8 @@ int dropRate = 5;
 void setup(){
   size(800,600);
   frameRate(60);
-  f = createFont("TestPolice.otf",1);
+  titre = createFont("PoliceTitre.ttf",1);
+  texte = createFont("PoliceTexte.ttf",1);
   smooth();
   xVaisseau = width>>1;  
   yVaisseau = height>>1;
@@ -148,7 +149,7 @@ void ecranOptions(){
    cp5.getController("Volume musique").setVisible(true);
    cp5.getController("Volume Explosion").setVisible(true);
    cp5.getController("Chance d'apparation d'un ennemi").setVisible(true);
-  textFont(f,30);
+  textFont(titre,25);
   AffOp();
   text("Back / Retour",width>>1,height*0.9+10);
   if (mouseX<(width>>1)+100 && mouseX>(width>>1)-100 && mouseY<(height*0.9)+40 && mouseY>(height*0.9)-40) { // Retour
@@ -169,7 +170,7 @@ void draw(){
             bougerVaisseau();
             collision();
             affichage();
-            textFont(f,20);
+            textFont(texte,20);
             text("Space/Espace : Pause",width-140,20);
             String score = "Score : "+playerScore;
             text(score,40,20);
@@ -237,11 +238,11 @@ void ecranAccueil(){
   noFill();
   stroke(0,0,0);
   rectMode(CENTER);
-  textFont(f,75);
+  textFont(titre,75);
   textAlign(CENTER);
   fill(255,0,0);
   text("ASTROBREAKER",width>>1,height/5);
-  textFont(f,30);
+  textFont(titre,28);
   noFill();
   if( (mouseX<(width>>1)+100 && mouseX>(width>>1)-100 && mouseY<(height/3)+40 && mouseY>(height/3)-40) ){ //Souris sur PLAY / JOUER
    fill(255,50);
@@ -284,10 +285,10 @@ void ajouterEnnemis(){
 void ecranCopyrights(){
   background(fondJeu);
   textAlign(CENTER);
-  textFont(f,75);
+  textFont(titre,75);
   fill(255,0,0);
   text("Copyrights",width>>1,height/5);
-  textFont(f,30);
+  textFont(texte,30);
   text("blablablablablablablablablablablablablabla",width>>1,height/3);
   text("blablablablablablablablablablablablablabla",width>>1,height/3+40);
   text("blablablablablablablablablablablablablabla",width>>1,height/3+80);
@@ -306,6 +307,7 @@ void ecranSortie(){
   background(fondAccueil);
   textAlign(CENTER);
   fill(255,0,0);
+  textFont(texte,30);
   text("Êtes-vous sûr de vouloir quitter ?",width>>1,height/3);
   if (mouseX<(width>>2)+100 && mouseX>(width>>2)-100 && mouseY<(height>>1)+40 && mouseY>(height>>1)-40) { // Retour
     fill(255,50);
@@ -317,7 +319,7 @@ void ecranSortie(){
   }
   else noFill();
   rect(width*0.75,height>>1,200,80);
-  textFont(f,30);
+  textFont(texte,30);
   fill(255,0,0);
   text("Yes / Oui",width>>2,(height>>1)+10);
   text("No / Non",width*0.75,(height>>1)+10);
