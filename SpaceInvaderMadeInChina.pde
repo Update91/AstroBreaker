@@ -3,11 +3,11 @@ import controlP5.*;
 SoundFile explode;
 SoundFile music;
 // taille des Objets
-int tVaisseau = 50;
-int tEnnemis = 45;
+int tVaisseau = 40;
+int tEnnemis = 30;
 //vitesse ennemis +vaisseau
 int eSpeed = 4;
-int vSpeed = 6;
+int vSpeed = 8;
 // coordonnées vaisseau
 int xVaisseau;
 int yVaisseau;
