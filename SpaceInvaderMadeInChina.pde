@@ -3,11 +3,11 @@ import controlP5.*;
 SoundFile explode;
 SoundFile music;
 // taille des Objets
-int tVaisseau = 30;
-int tEnnemis = 30;
+int tVaisseau = 50;
+int tEnnemis = 45;
 //vitesse ennemis +vaisseau
-int eSpeed = 1;
-int vSpeed = 2;
+int eSpeed = 4;
+int vSpeed = 4;
 // coordonnées vaisseau
 int xVaisseau;
 int yVaisseau;
@@ -36,15 +36,18 @@ ControlP5 cp5;
 //
 float volumeM =0.05;
 float volumeE = 0.05;
+//
+int dropRate = 5;
 
  
 void setup(){
   size(800,600);
+  frameRate(60);
   f = createFont("TestPolice.otf",1);
   smooth();
   xVaisseau = width>>1;  
   yVaisseau = height>>1;
-  frameRate(180);
+  
   screen = 0;
   aireT = triangleA(xVaisseau, yVaisseau,xVaisseau+tVaisseau, (yVaisseau-(tVaisseau>>1)), xVaisseau+tVaisseau, (yVaisseau+(tVaisseau>>1)));
   explode = new SoundFile(this, "8BitExplosion.mp3"); //Variable qui correspond à un fichier son placé dans /data du dossier projet
@@ -58,6 +61,8 @@ void setup(){
   vaisseau = loadImage("vaisseau.png");
   ////////
    cp5 = new ControlP5(this);
+   cp5.setColorActive(0xffff0000).setColorForeground(0xffaa0000);
+   
     cp5.addSlider("Taille Enemis")
       .setPosition(10,50)
       .setSize(550,40)
@@ -67,7 +72,7 @@ void setup(){
       .setVisible(false);
       
    cp5.addSlider("Taille Vaisseau")
-      .setPosition(10,200)
+      .setPosition(10,170)
       .setSize(550,40)
       .setRange(15,100)
       .setValue(tVaisseau)
@@ -75,7 +80,7 @@ void setup(){
       .setVisible(false);
       
    cp5.addSlider("Vitesse Ennemis")
-      .setPosition(10,300)
+      .setPosition(10,250)
       .setSize(550,40)
       .setRange(1,20)
       .setValue(eSpeed)
@@ -83,7 +88,7 @@ void setup(){
       .setVisible(false);
       
    cp5.addSlider("Vitesse Vaisseau")
-      .setPosition(10,350)
+      .setPosition(10,300)
       .setSize(550,40)
       .setRange(1,20)
       .setValue(vSpeed)
@@ -91,19 +96,27 @@ void setup(){
       .setVisible(false);
       
    cp5.addSlider("Volume musique")
-      .setPosition(10,400)
+      .setPosition(10,350)
       .setSize(550,40)
-      .setRange(0,1)
-      .setValue(volumeM)
+      .setRange(0,100)
+      .setValue(volumeM*100)
       .setId(5)
       .setVisible(false);
       
    cp5.addSlider("Volume Explosion")
+      .setPosition(10,400)
+      .setSize(550,40)
+      .setRange(0,100)
+      .setValue(volumeE*100)
+      .setId(6) 
+      .setVisible(false);
+      
+   cp5.addSlider("Chance d'apparation d'un ennemi")
       .setPosition(10,450)
       .setSize(550,40)
-      .setRange(0,10)
-      .setValue(volumeE)
-      .setId(6)
+      .setRange(0,100)
+      .setValue(dropRate)
+      .setId(6) 
       .setVisible(false);
    //////
    
@@ -120,18 +133,21 @@ void AffOp()
   
   imageMode(CENTER); 
   image(asteroid,725,70,tE,tE);
-  image(vaisseau,725,220,tV,tV);
+  image(vaisseau,725,180,tV,tV);
    
 }
 
 void ecranOptions(){
   background(fondAccueil);
+  fill(255,0,0);
+    
    cp5.getController("Taille Enemis").setVisible(true);
    cp5.getController("Taille Vaisseau").setVisible(true);
    cp5.getController("Vitesse Ennemis").setVisible(true);
    cp5.getController("Vitesse Vaisseau").setVisible(true);
    cp5.getController("Volume musique").setVisible(true);
    cp5.getController("Volume Explosion").setVisible(true);
+   cp5.getController("Chance d'apparation d'un ennemi").setVisible(true);
   textFont(f,30);
   AffOp();
   text("Back / Retour",width>>1,height*0.9+10);
@@ -148,7 +164,7 @@ void draw(){
     case 0: ecranAccueil(); cursor(); break;  // Affichage Ecran Accueil
     case 1: background(fondJeu);              // Passage en mode Jeu                    
             noCursor();
-            if((int)random(0,50)==0) ajouterEnnemis();
+            if((int)random(0,100)<=dropRate) ajouterEnnemis();
             bougerEnnemi();
             bougerVaisseau();
             collision();
@@ -185,12 +201,16 @@ void mousePressed(){
       cp5.getController("Vitesse Vaisseau").setVisible(false);
       cp5.getController("Volume musique").setVisible(false);
       cp5.getController("Volume Explosion").setVisible(false);
+      cp5.getController("Chance d'apparation d'un ennemi").setVisible(false);
+      
       tEnnemis =(int) cp5.getController("Taille Enemis").getValue();
       tVaisseau = (int) cp5.getController("Taille Vaisseau").getValue();
       vSpeed =(int) cp5.getController("Vitesse Vaisseau").getValue();
       eSpeed =(int) cp5.getController("Vitesse Ennemis").getValue();
-      volumeE=cp5.getController("Volume Explosion").getValue();
-      volumeM=cp5.getController("Volume musique").getValue();
+      dropRate =(int) cp5.getController("Chance d'apparation d'un ennemi").getValue()/2;  
+      volumeE=cp5.getController("Volume Explosion").getValue()/100;
+      volumeM=cp5.getController("Volume musique").getValue()/100;
+     
       aireT = triangleA(xVaisseau, yVaisseau,xVaisseau+tVaisseau, (yVaisseau-(tVaisseau>>1)), xVaisseau+tVaisseau, (yVaisseau+(tVaisseau>>1)));
       music.amp(volumeM);
       explode.amp(volumeE);
@@ -426,6 +446,7 @@ void affichage(){
     stroke(0);
     imageMode(CENTER);
     image(asteroid,x,y,tEnnemis,tEnnemis);
+    
     
    
   }
